@@ -1,0 +1,38 @@
+{
+  "name": "rescuenet-multi-db-backend",
+  "version": "2.0.0",
+  "description": "RescueNet Disaster Management System - Multi-Database Backend (PostgreSQL, MongoDB, Neo4j)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node config/seed.js",
+    "init-pg": "node -e \"require('./config/postgres').initializeDatabase()\"",
+    "init-neo4j": "node -e \"require('./config/neo4j').initializeGraph()\""
+  },
+  "keywords": [
+    "disaster",
+    "management",
+    "api",
+    "mongodb",
+    "postgresql",
+    "neo4j",
+    "multi-database"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.21.0",
+    "neo4j-driver": "^5.28.3",
+    "pg": "^8.17.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
