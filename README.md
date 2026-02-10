@@ -3,8 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18.2-blue.svg)](https://reactjs.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://www.mysql.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-6+-green.svg)](https://www.mongodb.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue.svg)](https://www.postgresql.org/)
 [![Neo4j](https://img.shields.io/badge/Neo4j-5+-blue.svg)](https://neo4j.com/)
 
 A comprehensive disaster management system leveraging **polyglot persistence** with 4 database technologies to efficiently handle diverse data requirements during emergencies.
@@ -13,7 +14,7 @@ A comprehensive disaster management system leveraging **polyglot persistence** w
 
 ## 🌟 Overview
 
-RescueNet is an advanced, full-stack web application designed to revolutionize emergency response operations through intelligent data management and real-time coordination. The system uses the **right database for the right data** approach, integrating PostgreSQL, MongoDB, Neo4j, and SQLite.
+RescueNet is an advanced, full-stack web application designed to revolutionize emergency response operations through intelligent data management and real-time coordination. The system uses the **right database for the right data** approach, integrating MySQL, MongoDB, PostgreSQL, and Neo4j.
 
 ### Key Features
 
@@ -42,49 +43,44 @@ RescueNet is an advanced, full-stack web application designed to revolutionize e
 │         RESTful API • JWT Auth • 40+ Endpoints         │
 └─────────────────────────────────────────────────────────┘
                           │
-        ┌─────────────────┼─────────────────┐
-        ▼                 ▼                 ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  PostgreSQL  │  │   MongoDB    │  │    Neo4j     │
-│ Transactional│  │  Flexible    │  │    Graph     │
-│   + PL/SQL   │  │  Documents   │  │ Relationships│
-└──────────────┘  └──────────────┘  └──────────────┘
-        │
-        ▼
-┌──────────────┐
-│    SQLite    │
-│ Local Storage│
-└──────────────┘
+        ┌─────────────────┼─────────────────┬──────────────┐
+        ▼                 ▼                 ▼              ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│    MySQL     │  │   MongoDB    │  │ PostgreSQL   │  │    Neo4j     │
+│ Operational  │  │  Flexible    │  │ Analytical   │  │    Graph     │
+│    Data      │  │  Documents   │  │   + PL/SQL   │  │ Relationships│
+└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
 ### Database Responsibilities
 
 | Database | Purpose | Use Cases |
 |----------|---------|-----------|
-| **PostgreSQL** | Structured transactional data with ACID compliance | Users, Zones, Shelters, Resources, Teams, Inventory |
+| **MySQL** | Structured operational data with ACID compliance | Users, Zones, Shelters, Resources, Teams, Citizen Requests, Vehicles |
 | **MongoDB** | Semi-structured flexible documents | Disaster Reports, Resource Requests |
-| **Neo4j** | Graph relationships and network analysis | Team Collaboration, Resource Flow, Coordination |
-| **SQLite** | Lightweight local storage | Offline Access, Data Backup, Development |
+| **PostgreSQL** | Complex analytics and stored procedures | PL/SQL Procedures, Advanced Queries, Transactions |
+| **Neo4j** | Graph relationships and network analysis | Team Collaboration, Resource Flow, Route Optimization |
 
-## 📊 Statistics
+## 📊 Project Statistics
 
 - **4 Database Technologies** integrated seamlessly
 - **40+ RESTful API Endpoints**
-- **13 PostgreSQL Tables** with 14 PL/SQL procedures/functions
-- **12 MongoDB Collections** with flexible schemas
-- **5 Neo4j Node Types** with 6 relationship types
-- **11 SQLite Tables** for local storage
+- **11 MySQL Tables** with normalized schema
+- **2 MongoDB Collections** with flexible schemas
+- **5 Neo4j Node Types** with relationship mapping
+- **14 PL/SQL Procedures/Functions** in PostgreSQL
 - **25+ React Components**
-- **150 Test Cases** with 100% pass rate
-- **5,500+ Lines of Code**
+- **Clean Data** - No duplicates with INSERT IGNORE
+- **Bidirectional Sync** - UI ↔ Database
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
-- PostgreSQL 15+
+- Node.js 16+
+- MySQL 8.0+
 - MongoDB 6+
+- PostgreSQL 14+
 - Neo4j 5+
 - npm or yarn
 
@@ -115,6 +111,13 @@ Create `.env` file in the backend directory:
 # MongoDB
 MONGODB_URI=mongodb://localhost:27017/disaster_management
 
+# MySQL
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_DB=disaster_management
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+
 # PostgreSQL
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
@@ -132,14 +135,11 @@ PORT=5000
 JWT_SECRET=your_jwt_secret_key
 ```
 
-5. **Initialize databases**
+5. **Initialize MySQL database**
 ```bash
-# PostgreSQL
-cd backend
-npm run init-pg
-
-# Neo4j
-npm run init-neo4j
+# Open MySQL Workbench or MySQL CLI
+# Run the schema file:
+mysql -u root -p disaster_management < sql-queries/complete-schema.sql
 ```
 
 6. **Start the application**
@@ -159,177 +159,213 @@ npm start
 7. **Access the application**
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:5000
-- Health Check: http://localhost:5000/api/health
+- API Health Check: http://localhost:5000/api/health
 
 ## 📚 Documentation
 
-- [Setup and Run Guide](SETUP_AND_RUN.md)
-- [Database Architecture](DATABASE_ARCHITECTURE.md)
-- [How It Works](HOW_IT_WORKS.md)
-- [Demo Queries](DEMO_QUERIES.md)
-- [Neo4j Installation](NEO4J_INSTALLATION.md)
-- [Database Connectivity Testing](DATABASE_CONNECTIVITY_TEST.md)
-- [Problem Statement & Objectives](PROBLEM_STATEMENT_AND_OBJECTIVES.md)
+- [System Architecture](SYSTEM_ARCHITECTURE.md) - Complete architecture with diagrams
+- [Database Status](DATABASE_STATUS.md) - Current database configuration
+- [How It Works](HOW_IT_WORKS.md) - Detailed functionality guide
+- [Demo Queries](DEMO_QUERIES.md) - Example database queries
 
 ## 🎯 Features
 
 ### User Features
-- 🚨 Report disasters with interactive map selection
+- 🚨 Report disasters with location
 - 📦 Request emergency resources
-- 🆘 SOS emergency button
-- 📊 Personal activity tracking
+- 🆘 Submit citizen requests
+- 📊 View personal activity
 - 🔔 Real-time notifications
 - 📞 Emergency contacts directory
 
 ### Admin Features
 - 📥 Unified inbox for all submissions
-- 🎯 Team assignment with PL/SQL procedures
+- 🎯 Team assignment and coordination
 - 📦 Resource allocation with inventory management
 - 🏢 Shelter capacity management
 - 🚗 Vehicle fleet tracking
 - 📈 Real-time analytics dashboard
 - 👥 User management
 
-## 🗄️ Database Features
+## 🗄️ Database Details
 
-### PostgreSQL (Transactional Data)
-- **12+ Tables** with normalized schema
-- **PL/SQL Stored Procedures**:
-  - `assign_team_to_request()` - Team assignment with validation
-  - `allocate_resources()` - Resource allocation with inventory checks
-  - `resolve_request()` - Request resolution workflow
-- **Functions**:
-  - `get_zone_statistics()` - Zone-level analytics
-  - `get_available_capacity()` - Shelter capacity calculations
-  - `get_team_workload()` - Team workload analysis
-- **Triggers**:
-  - Automatic audit logging
-  - Inventory threshold alerts
-  - Capacity validation
+### MySQL (Operational Data)
+**11 Tables**:
+- `users` - User accounts (7 users)
+- `disaster_zones` - Declared zones (4 zones)
+- `shelters` - Emergency shelters (4 shelters)
+- `resource_centers` - Distribution centers
+- `resources` - Resource types
+- `inventories` - Stock management
+- `rescue_teams` - Team information
+- `team_members` - Team composition
+- `vehicles` - Fleet tracking (4 vehicles)
+- `citizen_requests` - Help requests (7 requests)
+- `team_assignments` - Deployments
+
+**Features**:
+- ✅ No duplicate data (INSERT IGNORE)
+- ✅ Foreign key constraints
+- ✅ Indexed for performance
+- ✅ Bidirectional sync with UI
 
 ### MongoDB (Flexible Documents)
-- **Flexible schemas** for different disaster types
-- **Aggregation pipelines** for analytics
-- **Embedded documents** for related data
+**Collections**:
+- `disaster_reports` - User-submitted reports (9 reports)
+- `resource_requests` - Resource needs (4 requests)
+
+**Features**:
+- Flexible schema for evolving data
 - Fast document-based queries
+- JSON-native integration
+
+### PostgreSQL (Analytics)
+**Features**:
+- **PL/SQL Stored Procedures**:
+  - `assign_team_to_request()` - Team assignment
+  - `allocate_resources()` - Resource allocation
+  - `resolve_request()` - Request resolution
+- **Functions**:
+  - `get_zone_statistics()` - Zone analytics
+  - `get_available_capacity()` - Capacity calculations
+  - `get_team_workload()` - Workload analysis
 
 ### Neo4j (Graph Relationships)
-- **Team collaboration networks**
-- **Resource flow tracking**
-- **Shortest path analysis**
-- **Hub detection** (most connected entities)
-- Visual relationship exploration
+**Node Types**:
+- Teams
+- Zones
+- Resources
+- Members
+- Requests
 
-### SQLite (Local Storage)
-- **Zero-configuration** file-based storage
-- **Portable** single .db file
-- **Offline access** capabilities
-- Easy backup and restore
+**Use Cases**:
+- Team collaboration networks
+- Resource flow tracking
+- Shortest path analysis
+- Relationship visualization
 
 ## 🔧 API Endpoints
 
-### PostgreSQL Routes (`/api/pg/`)
-- `GET /users` - List all users
-- `GET /zones` - List disaster zones
-- `POST /assign-team` - Assign team (PL/SQL)
-- `POST /allocate-resources` - Allocate resources (PL/SQL)
-- `GET /zone-stats/:id` - Get zone statistics
-
-### MongoDB Routes (`/api/`)
-- `GET/POST /disaster-reports` - Disaster report CRUD
-- `GET/POST /resource-requests` - Resource request CRUD
-
-### Neo4j Routes (`/api/graph/`)
-- `GET /team-collaboration` - Team coordination network
-- `GET /resource-flow` - Resource distribution paths
-- `GET /zone-overview` - Zone with all relationships
-
-### SQLite Routes (`/api/sqlite/`)
-- `GET /status` - Database connection status
-- `GET /tables` - List all tables
-- `POST /query` - Execute custom SQL query
-
-### Utility Routes
-- `GET /api/health` - All 4 database health check
-- `POST /api/auth/login` - User authentication
-- `POST /api/auth/register` - User registration
-
-## 🧪 Testing
-
-Run the comprehensive database connectivity test:
-```bash
-cd backend
-node test-all-databases.js
+### MySQL Routes (`/api/mysql/*` or `/api/requests`)
+```
+GET    /api/requests              - Get all citizen requests
+POST   /api/requests              - Create new request
+PUT    /api/requests/:id          - Update request
+DELETE /api/requests/:id          - Delete request
+GET    /api/mysql/users           - Get users
+GET    /api/mysql/zones           - Get disaster zones
+POST   /api/mysql/query           - Execute custom SQL
 ```
 
-This tests all 4 databases and generates a detailed report.
+### MongoDB Routes (`/api/*`)
+```
+GET    /api/disaster-reports      - Get all reports
+POST   /api/disaster-reports      - Submit report
+GET    /api/resource-requests     - Get resource requests
+POST   /api/resource-requests     - Request resources
+```
+
+### PostgreSQL Routes (`/api/pg/*`)
+```
+POST   /api/pg/execute-procedure  - Run stored procedure
+GET    /api/pg/analytics          - Complex analytics
+```
+
+### Neo4j Routes (`/api/graph/*`)
+```
+GET    /api/graph/shortest-path   - Find optimal route
+GET    /api/graph/relationships   - Team connections
+```
+
+### Utility Routes
+```
+GET    /api/health                - Database health check
+POST   /api/auth/login            - User authentication
+POST   /api/auth/register         - User registration
+```
 
 ## 👤 Default Credentials
 
 ### Admin Account
-- Email: admin@rescuenet.com
-- Password: admin123
+- Email: **admin@rescuenet.com**
+- Password: **admin123**
 
-### User Account
-- Email: user@rescuenet.com
-- Password: user123
+### Responder Account
+- Email: **responder@rescuenet.com**
+- Password: **responder123**
+
+### Citizen Account
+- Email: **citizen@rescuenet.com**
+- Password: **citizen123**
 
 ## 🛠️ Technology Stack
 
 ### Frontend
 - React 18.2
-- Tailwind CSS 3.3
-- Leaflet Maps 1.9
+- Tailwind CSS / Custom CSS
+- Leaflet Maps
 - Axios 1.6
-- React Router 6.20
+- React Router 6
+- Lucide React Icons
 
 ### Backend
-- Node.js
+- Node.js 16+
 - Express.js 4.18
 - JWT Authentication
 - Bcrypt for password hashing
+- Nodemon for development
 
 ### Databases
-- PostgreSQL 15+ (with PL/SQL)
-- MongoDB 6+
-- Neo4j 5+
-- SQLite 3
+- MySQL 8.0 (primary operational database)
+- MongoDB 6+ (flexible documents)
+- PostgreSQL 14+ (analytics + PL/SQL)
+- Neo4j 5+ (graph relationships)
 
 ### Development Tools
-- pgAdmin (PostgreSQL)
+- MySQL Workbench
 - MongoDB Compass
+- pgAdmin
 - Neo4j Browser
 - VS Code
-
-## 📈 Performance Metrics
-
-| Operation | PostgreSQL | MongoDB | Neo4j | SQLite |
-|-----------|------------|---------|-------|--------|
-| Simple Read | 15ms | 8ms | 12ms | 5ms |
-| Complex JOIN | 45ms | N/A | N/A | 30ms |
-| Graph Traversal | N/A | N/A | 25ms | N/A |
-| Transaction | 20ms | 18ms | 22ms | 12ms |
 
 ## 🎓 Academic Significance
 
 This project demonstrates:
-- ✅ **Polyglot Persistence** - Using multiple databases in one application
-- ✅ **Database Selection Criteria** - Choosing the right database for specific needs
-- ✅ **PL/SQL Programming** - Stored procedures, functions, triggers
+- ✅ **Polyglot Persistence** - Multiple databases in one application
+- ✅ **Database Selection Criteria** - Right tool for the right job
+- ✅ **PL/SQL Programming** - Stored procedures and functions
 - ✅ **NoSQL Flexibility** - Schema-less document storage
-- ✅ **Graph Database Concepts** - Relationship-based queries
-- ✅ **Full-Stack Development** - Complete end-to-end system
-- ✅ **RESTful API Design** - Clean, organized architecture
-- ✅ **Real-World Application** - Solving actual disaster management challenges
+- ✅ **Graph Database Concepts** - Relationship queries
+- ✅ **Full-Stack Development** - Complete MERN-like stack
+- ✅ **RESTful API Design** - Clean architecture
+- ✅ **Real-World Application** - Practical disaster management
 
 ## 🌍 Social Impact
 
 RescueNet addresses critical disaster management needs:
-- **Faster Emergency Response** - Real-time reporting and coordination
-- **Better Resource Allocation** - Optimized inventory management
+- **Faster Emergency Response** - Real-time reporting
+- **Better Resource Allocation** - Optimized inventory
 - **Improved Team Coordination** - Network-based collaboration
-- **Enhanced Decision Making** - Real-time analytics and insights
-- **Increased Accessibility** - Web-based, mobile-responsive interface
+- **Enhanced Decision Making** - Real-time analytics
+- **Increased Accessibility** - Web-based interface
+
+## 🔒 Security Features
+
+- JWT-based authentication
+- Role-based access control (Admin, Responder, Citizen)
+- Bcrypt password hashing
+- CORS enabled
+- Input validation
+- SQL injection prevention
+
+## 🚦 Current Status
+
+✅ **All Systems Operational**
+- Backend Server: Running on port 5000
+- Frontend Server: Running on port 3000
+- MySQL: 7 users, 4 zones, 7 citizen requests
+- MongoDB: 9 reports, 4 resource requests
+- All databases connected and synced
 
 ## 🤝 Contributing
 
@@ -344,20 +380,23 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 **Archa Biju**
 - GitHub: [@archabiju](https://github.com/archabiju)
 - Project: M.Tech - Database Management Systems
+- University: [Your University Name]
 
 ## 🙏 Acknowledgments
 
-- PostgreSQL Community for excellent documentation
+- MySQL Community for robust relational database
+- PostgreSQL for advanced SQL features
 - MongoDB team for flexible NoSQL solutions
-- Neo4j for powerful graph database capabilities
-- React team for the amazing frontend framework
+- Neo4j for powerful graph database
+- React team for amazing frontend framework
 
 ## 📞 Support
 
-For support, please open an issue in the GitHub repository or contact the author.
+For support, please open an issue in the GitHub repository.
 
 ---
 
 **Made with ❤️ for better disaster management**
 
-**Last Updated**: January 27, 2026
+**Last Updated**: February 10, 2026
+**Version**: 2.0.0

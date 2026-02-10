@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const postgres = require('./config/postgres');
 const neo4j = require('./config/neo4j');
+const mysql = require('./config/mysql');
 
 dotenv.config();
 
@@ -30,6 +31,15 @@ neo4j.testConnection().then(connected => {
   }
 }).catch(err => {
   console.log('⚠️ Neo4j not available (optional):', err.message);
+});
+
+// Test MySQL connection (for structured SQL data)
+mysql.testConnection().then(result => {
+  if (result.connected) {
+    console.log('✓ MySQL ready for SQL queries - Tables:', result.tables.join(', '));
+  }
+}).catch(err => {
+  console.log('⚠️ MySQL not available:', err.message);
 });
 
 // ============================================================
@@ -73,9 +83,9 @@ app.use('/api/pg', require('./routes/postgres/pgRoutes'));
 app.use('/api/graph', require('./routes/graph/graphRoutes'));
 
 // ============================================================
-// ROUTES - SQLite (Simple file-based database)
+// ROUTES - MySQL (SQL Workbench connected database)
 // ============================================================
-app.use('/api/sqlite', require('./routes/sqlite/sqliteRoutes'));
+app.use('/api/mysql', require('./routes/mysql/mysqlRoutes'));
 
 // ============================================================
 // HEALTH CHECK - All Databases
@@ -121,17 +131,7 @@ app.get('/api/health', async (req, res) => {
     health.databases.neo4j = { status: 'disconnected', message: err.message };
   }
 
-  // Check SQLite
-  try {
-    const sqlite = require('./config/sqlite');
-    const sqliteStatus = await sqlite.testConnection();
-    health.databases.sqlite = {
-      status: sqliteStatus.connected ? 'connected' : 'disconnected',
-      tables: sqliteStatus.tables
-    };
-  } catch (err) {
-    health.databases.sqlite = { status: 'error', message: err.message };
-  }
+
 
   res.json(health);
 });
@@ -146,8 +146,7 @@ app.get('/', (req, res) => {
     databases: {
       mongodb: 'Semi-structured data (reports, requests)',
       postgresql: 'Transactional data & stored procedures',
-      neo4j: 'Graph relationships & analytics',
-      sqlite: 'Legacy logs & local storage'
+      neo4j: 'Graph relationships & analytics'
     },
     endpoints: {
       health: '/api/health',
